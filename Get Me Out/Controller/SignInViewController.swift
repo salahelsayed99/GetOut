@@ -25,7 +25,6 @@ class SignInViewController: UIViewController,UITextFieldDelegate{
         super.viewWillAppear(animated)
         guard let navBar = navigationController?.navigationBar else { fatalError("Navigation controller does not exist.")}
         navBar.hide()
-
     }
     
     
@@ -40,27 +39,25 @@ class SignInViewController: UIViewController,UITextFieldDelegate{
         guard let password = passwordTextField.text else { return }
         
         if email.isEmpty || password.isEmpty{
-                   let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-                          
-                          let alert = AlertService.showAlert(style: .alert, title: "Please fill all fields", message: nil, actions: [alertAction], completion: nil)
-                          present(alert, animated: true, completion: nil)
-               }
-                
+            let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            
+            let alert = AlertService.showAlert(style: .alert, title: "Please fill all fields", message: nil, actions: [alertAction], completion: nil)
+            present(alert, animated: true, completion: nil)
+        }
+            
         else{
-        service.fetchSignInData(email: email, password: password) { (obj) in
-            if obj.statusCode == 200{
-                print("sucess")
-             let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                   let nextViewController = storyBoard.instantiateViewController(withIdentifier: "nextView") as! UITabBarController
-                   nextViewController.modalPresentationStyle = .fullScreen
-                   self.present(nextViewController, animated:true, completion:nil)
+            service.fetchSignInData(email: email, password: password) { (obj) in
+                if obj.statusCode == 200{
+                    print("sucess")
+                    //Helper.saveToken(token: obj.user.id)
+                    self.present(Helper.goToTabBar(), animated: true, completion: nil)
+                }
             }
+            
         }
         
-    }
         
         
-            
     }
     
     @IBAction func signInFaceBook(_ sender: UIButton) {

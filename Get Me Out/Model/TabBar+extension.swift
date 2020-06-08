@@ -13,6 +13,8 @@ extension UITabBar{
     func hide(){
         self.isHidden = true
     }
+    
+    
     func firstViewAfterTabBar(){
           self.tintColor = .white
           self.barTintColor = .blue
