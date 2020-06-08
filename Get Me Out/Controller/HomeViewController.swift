@@ -38,6 +38,7 @@ class HomeViewController: UIViewController {
                                 self.searchResult.append(newSearchResultObj)
                             }
                             self.collectionView.reloadData()
+
                         }
                         
                     }
@@ -58,6 +59,7 @@ class HomeViewController: UIViewController {
                                   self.recievedData.append(newObj)
                               }
                               self.collectionView.reloadData()
+
                           }
                           
                       }
@@ -73,7 +75,6 @@ class HomeViewController: UIViewController {
     
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         collectionView.delegate=self
         collectionView.dataSource=self
@@ -97,8 +98,7 @@ class HomeViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        recievedData.removeAll()
-        searchResult.removeAll()
+        
         
     }
     

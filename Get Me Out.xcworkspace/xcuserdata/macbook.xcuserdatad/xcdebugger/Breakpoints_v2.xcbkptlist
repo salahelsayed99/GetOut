@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "D3A1D689-DA64-4E1C-9716-415A0934271F"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5B5F2EC7-52C5-4255-BDFB-EAE871734A7F"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Get Me Out/Model/ServiceNetworking.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "29"
+            endingLineNumber = "29"
+            landmarkName = "fetchSignUpData(email:password:fullName:mobile:cityID:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "5B5F2EC7-52C5-4255-BDFB-EAE871734A7F - 74c94cdf7afc844"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Get_Me_Out.Service.fetchSignUpData(email: Swift.String, password: Swift.String, fullName: Swift.String, mobile: Swift.String, cityID: Swift.String, completion: (Get_Me_Out.Signup) -&gt; ()) -&gt; ()"
+                  moduleName = "Get Me Out"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/salah/Desktop/GetOut/Get%20Me%20Out/Model/ServiceNetworking.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "29"
+                  endingLineNumber = "29"
+                  offsetFromSymbolStart = "1131">
+               </Location>
+               <Location
+                  uuid = "5B5F2EC7-52C5-4255-BDFB-EAE871734A7F - f958ea01edfe5c6b"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 () -&gt; () in closure #1 (Swift.Optional&lt;Foundation.Data&gt;, Swift.Optional&lt;__C.NSURLResponse&gt;, Swift.Optional&lt;Swift.Error&gt;) -&gt; () in Get_Me_Out.Service.fetchSignUpData(email: Swift.String, password: Swift.String, fullName: Swift.String, mobile: Swift.String, cityID: Swift.String, completion: (Get_Me_Out.Signup) -&gt; ()) -&gt; ()"
+                  moduleName = "Get Me Out"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/salah/Desktop/GetOut/Get%20Me%20Out/Model/ServiceNetworking.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "30"
+                  endingLineNumber = "30"
+                  offsetFromSymbolStart = "41">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "C645253D-831C-45BC-B38B-1BA4FD77DAC7"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Get Me Out/Controller/SignInViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "signInBtn(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>

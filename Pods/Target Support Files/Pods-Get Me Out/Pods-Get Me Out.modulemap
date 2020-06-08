@@ -1,0 +1,6 @@
+framework module Pods_Get_Me_Out {
+  umbrella header "Pods-Get Me Out-umbrella.h"
+
+  export *
+  module * { export * }
+}

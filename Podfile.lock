@@ -1,0 +1,24 @@
+PODS:
+  - Cosmos (21.0.0)
+  - lottie-ios (3.1.8)
+  - UnderLineTextField (2.1.0)
+
+DEPENDENCIES:
+  - Cosmos (~> 21.0)
+  - lottie-ios
+  - UnderLineTextField (~> 2.1)
+
+SPEC REPOS:
+  trunk:
+    - Cosmos
+    - lottie-ios
+    - UnderLineTextField
+
+SPEC CHECKSUMS:
+  Cosmos: 3dfb6e4ba48bd48b8c9aa2a77048ae11ed114f96
+  lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
+  UnderLineTextField: b3f5307b56962331e30a965e81b79aae2df1de83
+
+PODFILE CHECKSUM: 04acd0cf5e6235990fc9b27766a8206411729e11
+
+COCOAPODS: 1.8.4
