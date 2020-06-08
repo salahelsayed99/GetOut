@@ -17,9 +17,7 @@ import Foundation
         
         func fetchSignUpData(email:String,password:String,fullName:String,mobile:String,cityID:String,completion: @escaping (Signup) -> ()) {
                           let urlString1 = "http://v1.khargny.com/api/signup?full_name=\(fullName)&email=\(email)&mobile=\(mobile)&city_id=\(cityID)&password=\(password)"
-                         //let url3="\(urlString1)"
                           guard let url = URL(string: urlString1) else { return }
-                       
                           URLSession.shared.dataTask(with: url) { (data, _, err) in
                               if let err = err {
                                   print("Failed to fetch data:", err)
@@ -41,7 +39,7 @@ import Foundation
         
         func fetchSignInData(email:String,password:String,completion: @escaping (SignIn) -> ()) {
                    let urlString1 = "http://v1.khargny.com/api/signin?email=\(email)&password=\(password)"
-                  //let url3="\(urlString1)"
+            
                    guard let url = URL(string: urlString1) else { return }
                 
                    URLSession.shared.dataTask(with: url) { (data, _, err) in
@@ -57,11 +55,33 @@ import Foundation
                            }
                        } catch let jsonErr {
                            print("Failed to serialize json:", jsonErr)
-                           
                        }
                        
                    }.resume()
                }
+        
+        func fetchGenericData<T: Decodable>(urlString: String, completion: @escaping (T) -> ()) {
+            guard let url = URL(string: urlString) else { return }
+            URLSession.shared.dataTask(with: url) { (data, _, err) in
+                if let err = err {
+                    print("Failed to fetch home feed:", err)
+                    return
+                }
+                
+                guard let data = data else { return }
+                do {
+                    let decodedData = try JSONDecoder().decode(T.self, from: data)
+                    DispatchQueue.main.async {
+                        completion(decodedData)
+                    }
+                } catch let jsonErr {
+                    print("Failed to serialize json:", jsonErr)
+                }
+                
+                }.resume()
+        }
+        
+        
     }
     
     

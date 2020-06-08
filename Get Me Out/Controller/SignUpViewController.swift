@@ -95,45 +95,12 @@ class SignUpViewController: UIViewController,UnderLineTextFieldDelegate {
         service.fetchSignUpData(email: email, password: password, fullName: fullName, mobile: phone, cityID: "1") { (info) in
             if info.statusCode == 200{
                 print("success")
-                let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
-                      let nextViewController = storyBoard.instantiateViewController(withIdentifier: "nextView")as! UITabBarController
-                      nextViewController.modalPresentationStyle = .fullScreen
-                      self.present(nextViewController, animated:true, completion:nil)
-
+                self.present(Helper.goToTabBar(), animated: true, completion: nil)
             }
         }
-        }
+    }
 }
 
 }
 
-
-// MARK: - SignUp
-//struct SignUp: Codable {
-//    var user: User
-//    let statusCode: Int
-//    let key: String
-//
-//    enum CodingKeys: String, CodingKey {
-//        case user
-//        case statusCode = "status_code"
-//        case key
-//    }
-//}
-//
-//// MARK: - User
-//struct User: Codable {
-//    var email, mobile, fullName, cityID: String
-//    let latitude, longitude, lang, active: String
-//    let id: Int
-//    let jwt: String
-//    let imageurl, imageurlorg: String
-//
-//    enum CodingKeys: String, CodingKey {
-//        case email, mobile
-//        case fullName = "full_name"
-//        case cityID = "city_id"
-//        case latitude, longitude, lang, active, id, jwt, imageurl, imageurlorg
-//    }
-//}
 

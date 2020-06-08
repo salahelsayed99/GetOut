@@ -7,30 +7,36 @@
 //
 
 import UIKit
+import Cosmos
 
 class DescriptionViewController: UIViewController {
+  
     
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        guard let navBar = navigationController?.navigationBar else { fatalError("Navigation controller does not exist.")
-//        }
-//        guard let tabBar = tabBarController?.tabBar else { fatalError("TabBar controller does not exist.")
-//               }
-//        navBar.firstViewAfterTabBar()
-//        tabBar.firstViewAfterTabBar()
-//    }
+    
+    var data:Datum?{
+        didSet{
+            print(self.data?.name ?? "error")
+            setData()
+        }
+    }
+    
     
     
     @IBOutlet weak var rateView: UIView!{
         didSet{
-            self.rateView.layer.cornerRadius = 15.0
+            self.rateView.rounded()
         }
     }
     
+    @IBOutlet weak var placeDescription: UITextView!{
+        didSet{
+            self.placeDescription.isEditable = false
+        }
+    }
     @IBOutlet weak var collectionView: UICollectionView!
     
     @IBOutlet weak var menuButton: UIButton!
-    {
+        {
         didSet{
             self.menuButton.circle()
         }
@@ -54,17 +60,22 @@ class DescriptionViewController: UIViewController {
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var numberOfRaters: UILabel!
+    @IBOutlet weak var placeRateInDescription: CosmosView!
+    
+    @IBOutlet weak var userRate: CosmosView!
+    @IBOutlet weak var namePlace: UILabel!
     var timer=Timer()
     var counter=0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         pageControl.numberOfPages=7
         pageControl.currentPage=0
         timer=Timer.scheduledTimer(timeInterval: 2.0, target: self, selector:#selector(changeImage), userInfo: nil, repeats: true)
         tableView.register(UINib(nibName:"CommentTableViewCell", bundle: nil), forCellReuseIdentifier: "Cell")
     }
-    
     
     @objc func changeImage(){
         if counter<7{
@@ -101,6 +112,16 @@ class DescriptionViewController: UIViewController {
         // go to fav (undone)
     }
     
+    func setData(){
+        DispatchQueue.main.async {
+            self.namePlace.text = self.data?.name
+            self.placeRateInDescription.rating = self.data?.rateAvg ?? 0
+            self.placeDescription.text = self.data?.shortDesc
+            self.numberOfRaters.text = "\(String(describing: self.data?.numOfRater))"
+        }
+       
+    }
+    
 }
 
 
@@ -120,17 +141,17 @@ extension DescriptionViewController:UICollectionViewDelegate,UICollectionViewDat
         return CGSize(width: size.width, height: size.height)
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0.0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0.0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    }
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    //        return 0.0
+    //    }
+    //
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    //        return 0.0
+    //    }
+    //
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    //        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    //    }
     
 }
 
@@ -149,6 +170,7 @@ extension DescriptionViewController:UITableViewDelegate,UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        
     }
     
     

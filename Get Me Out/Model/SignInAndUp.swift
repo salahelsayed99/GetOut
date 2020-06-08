@@ -1,5 +1,5 @@
 //
-//  Codable.swift
+//  SignInAndUp.swift
 //  Get Me Out
 //
 //  Created by Salah  on 02/06/2020.
