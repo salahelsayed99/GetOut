@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		043E624F24925B0300622080 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 043E624E24925B0300622080 /* File.swift */; };
 		2D611F568C699D1CB3C0C877 /* Pods_Get_Me_Out.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0182CB0C5C0DE1D09F0B743 /* Pods_Get_Me_Out.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		FA11D14524851505003944B0 /* ServiceNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11D14424851505003944B0 /* ServiceNetworking.swift */; };
 		FA11D1472485679E003944B0 /* String+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA11D1462485679E003944B0 /* String+extensions.swift */; };
@@ -62,6 +63,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		043E624E24925B0300622080 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		5AFC499CEB49D6303F709408 /* Pods-Get Me Out.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Get Me Out.release.xcconfig"; path = "Target Support Files/Pods-Get Me Out/Pods-Get Me Out.release.xcconfig"; sourceTree = "<group>"; };
 		6F6C4F730905213C625E1031 /* Pods-Get Me Out.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Get Me Out.debug.xcconfig"; path = "Target Support Files/Pods-Get Me Out/Pods-Get Me Out.debug.xcconfig"; sourceTree = "<group>"; };
 		F0182CB0C5C0DE1D09F0B743 /* Pods_Get_Me_Out.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Get_Me_Out.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -199,6 +201,7 @@
 				FA68B8F3247ECB3500B7B9D6 /* EditProfileViewController.swift */,
 				FA1606192480058A00FCE56E /* SettingsViewController.swift */,
 				FAA84525249101AD00DEF9D2 /* CategoryViewController.swift */,
+				043E624E24925B0300622080 /* File.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 				FAF5C18B2488E4E20013301F /* Helper.swift in Sources */,
 				FAEA7E84248D31CA00E9964F /* CategoryHomeObject.swift in Sources */,
 				FA68B8F2247EA9F200B7B9D6 /* Button+extensions.swift in Sources */,
+				043E624F24925B0300622080 /* File.swift in Sources */,
 				FA16061C2480070400FCE56E /* SettingsTableViewCell.swift in Sources */,
 				FAF1CE35243A80D400F72993 /* CEventViewController.swift in Sources */,
 				FA8C77DF24820D6E0042209A /* ExplainTableViewController.swift in Sources */,
