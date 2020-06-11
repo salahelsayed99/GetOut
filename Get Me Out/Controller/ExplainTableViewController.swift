@@ -10,13 +10,11 @@ import UIKit
 
 class ExplainTableViewController: UITableViewController{
     var categories = [CategoryHomeObject]()
-    
-    var textIntoSearchBar:String?{
-        didSet{
-            //print(self.textIntoSearchBar)
-        }
-    }
-    
+    var storedOffsets = [Int: CGFloat]()
+
+
+    var textIntoSearchBar:String?
+    @IBOutlet weak var collectionView: UICollectionView!
     
     var id:Int?
     var name:String?
@@ -30,20 +28,29 @@ class ExplainTableViewController: UITableViewController{
         searchController.searchBar.delegate = self
         super.viewDidLoad()
         tableView.separatorStyle = .none
-              Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/home_categories?lang=ar") { (info:Category) in
-                      if info.statusCode == 200{
-                        for category in info.categories{
-                            let newCategory = CategoryHomeObject(id: category.id, seeMoreAPIURL: category.seeMoreAPIURL, image: category.image, name: category.name, shortDesc: category.shortDesc, imageurl: category.imageurl, places: category.places)
-                            self.categories.append(newCategory)
-                        }
-                         self.tableView.reloadData()
-                      }
-                  }
-        
+        fetchData()
     }
     
     
-
+    func fetchData(){
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            DispatchQueue.main.async {
+                Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/home_categories?lang=ar") { (info:Category) in
+                    if info.statusCode == 200{
+                        for category in info.categories{
+                            let newCategory = CategoryHomeObject(id: category.id, seeMoreAPIURL: category.seeMoreAPIURL, image: category.image, name: category.name, shortDesc: category.shortDesc, imageurl: category.imageurl, places: category.places)
+                            self?.categories.append(newCategory)
+                        }
+                        self?.tableView.reloadData()
+                    }
+                }
+                
+            }
+        }
+    }
+    
+    
+    //MARK:-Navigation and Tabbar controller
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -51,7 +58,7 @@ class ExplainTableViewController: UITableViewController{
         guard let navBar = navigationController?.navigationBar else { fatalError("Navigation controller does not exist.")
         }
         guard let tabBar = tabBarController?.tabBar else { fatalError("TabBar controller does not exist.")
-               }
+        }
         navBar.firstViewAfterTabBar()
         navigationItem.largeTitleDisplayMode = .automatic
         tabBar.firstViewAfterTabBar()
@@ -67,119 +74,94 @@ class ExplainTableViewController: UITableViewController{
     //MARK:- searchBar
     
     @IBAction func searchBar(_ sender: UIBarButtonItem) {
-        
-        searchController.hidesNavigationBarDuringPresentation = true
-        searchController.searchBar.tintColor = UIColor.white
-        searchController.searchBar.barTintColor = UIColor.blue
-        let textFieldInsideSearchBar = searchController.searchBar.value(forKey: "searchField") as? UITextField
-        textFieldInsideSearchBar?.textColor = .black
-        textFieldInsideSearchBar?.backgroundColor = .white
-        present(searchController, animated: true, completion: nil)
+        present(Helper.searchBarCustomization(searchController: searchController), animated: true, completion: nil)
     }
     
     
     
     
     
-  // MARK: - Table view data source
-
-    
-    
-    
-        
+    // MARK: - Table view data source
     
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories.count
     }
-
+    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-       let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ExplainTableViewCell
-        //cell.categoryName.text = self.categories[indexPath.row].name
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ExplainTableViewCell
         cell.places = categories[indexPath.row]
+        cell.collectionViewOffset = storedOffsets[indexPath.row] ?? 0
+
         cell.buttonDelegate = self
         return cell
     }
     
     
     // MARK: - Table view delegate
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
+    
+    
+    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+         guard let tableViewCell = cell as? ExplainTableViewCell else { return }
+               storedOffsets[indexPath.row] = tableViewCell.collectionViewOffset
     }
-
+    
+    
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 210
+    }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       // tableView.deselectRow(at: indexPath, animated: true)
+        // tableView.deselectRow(at: indexPath, animated: true)
         tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let destinationVc = segue.destination as? HomeViewController{
-            if let data = self.id{
-                destinationVc.data = data
-                destinationVc.name = name
-                
+        if segue.identifier == "goToExplore"{
+            if let destinationVc = segue.destination as? ExploreViewController{
+                if let data = self.id{
+                    destinationVc.data = data
+                    destinationVc.name = name
+                }
             }
-            destinationVc.BeginSearch = textIntoSearchBar
-            //print(textIntoSearchBar)
+            
+        }
+        if segue.identifier == "goToSearch"{
+            if let dVC = segue.destination as? HomeViewController{
+                dVC.BeginSearch = textIntoSearchBar
+                searchController.isActive = false
+            }
+            
         }
     }
 }
 
 
-extension ExplainTableViewController:CollectionViewCellDelegate,ButtonHandler{
+extension ExplainTableViewController:ButtonHandler{
     func getId(id: Int, title: String) {
         self.id = id
         self.name = title
         performSegue(withIdentifier: "goToExplore", sender: self)
-
     }
-    
-    func getId(id: Int) {
-        self.id = id
-        
-        print(id)
-    }
-    
-    func collectionView(collectioncell: ExplainCollectionViewCell?, index: Int, didTappedInTableview TableCell: ExplainTableViewCell) {
-        
-      //send to description ViewController
-    }
-    
-    
 }
 
-    
-    
-extension ExplainTableViewController:UISearchBarDelegate{
 
+
+extension ExplainTableViewController:UISearchBarDelegate{
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         textIntoSearchBar = searchBar.text
-       // print(textIntoSearchBar)
-        performSegue(withIdentifier: "goToExplore", sender: self)
-//        if let searchTarget = searchBar.text{
-//                               DispatchQueue.main.async {
-//                                   Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/search?lang=ar&name=\(searchTarget)") { (info:SearchInformation) in
-//                                       if info.statusCode == 200{
-//                                        print("move to explore using search bar ")}}
-//    }
-//        }
-    }
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        if let vc = UIViewController() as? ExplainTableViewController{
-        present(vc, animated: true, completion: nil)
-        
-        searchBar.resignFirstResponder()
-        }
+        performSegue(withIdentifier: "goToSearch", sender: self)
+      
     }
     
-    
-
 }
 
 
 
-    //MARK:-Animation
+//MARK:-Animation
 //    func animateTable() {
 //              tableView.reloadData()
 //              let cells = tableView.visibleCells

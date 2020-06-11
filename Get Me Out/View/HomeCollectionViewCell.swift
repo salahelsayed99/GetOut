@@ -10,7 +10,30 @@ import UIKit
 import Cosmos
 
 class HomeCollectionViewCell:UICollectionViewCell{
-   
+    
+    override func awakeFromNib() {
+      timer = Timer.scheduledTimer(timeInterval:  3.0, target: self, selector:#selector(changeImage), userInfo: nil, repeats: true)
+            }
+    
+    
+    var currentIndex = 0
+    var timer:Timer?
+    var numberOfImages:[Image]?{
+        didSet{
+            pageControllE.numberOfPages = self.numberOfImages!.count
+        }
+    }
+    
+    
+    
+    @IBOutlet weak var bookMArkButton: UIButton!{
+        didSet{
+            self.bookMArkButton.circle()
+        }
+    }
+    
+    @IBOutlet weak var pageControllE: UIPageControl!
+    
     
     @IBOutlet weak var colllectionViewImages: UICollectionView!{
         didSet{
@@ -18,12 +41,10 @@ class HomeCollectionViewCell:UICollectionViewCell{
             self.colllectionViewImages.dataSource = self
         }
     }
+        
+    var arraySearchResultImages = [[UIImage]]()
     
-    var arrrayOfImages = [UIImage]()
-    
-    var arraySearchResultImages = [UIImage]()
-    
-    
+    var array = [UIImage]()
     @IBOutlet weak var viewContainingButtons: UIView!{
         didSet{
             self.viewContainingButtons.rounded()
@@ -38,7 +59,11 @@ class HomeCollectionViewCell:UICollectionViewCell{
         }
     }
     @IBOutlet weak var eventButton: UIButton!
-    @IBOutlet weak var placeName: UILabel!
+    @IBOutlet weak var placeName: UILabel!{
+        didSet{
+            self.placeName.adjustsFontSizeToFitWidth = true
+        }
+    }
     @IBOutlet weak var numberOfRaters: UILabel!
     
     @IBOutlet weak var placeRate: CosmosView!
@@ -47,28 +72,11 @@ class HomeCollectionViewCell:UICollectionViewCell{
             self.shortDesc.isEditable = false
         }
     }
-    
-    var data:DatumEObject?{
-        didSet{
-                
-            
-            if  let url = URL(string: self.data!.imageurl ){
-                        if let imageData = try? Data(contentsOf: url){
-                    DispatchQueue.main.async {
-                        self.arrrayOfImages.append(UIImage(data: imageData)!)
-                        self.placeName.text = self.data?.name
-                        self.placeRate.rating = self.data?.rateAvg ?? 0
-                        self.shortDesc.text = self.data?.shortDesc
-                        self.numberOfRaters.text = String("\(self.data?.numOfRater ?? 0) peoples Rate this place")
-                        self.colllectionViewImages.reloadData()
-                    }
-                }
-            }
-        }}
-    
+        
     
     var searchResults:SearchDataModel?{
         didSet{
+            arraySearchResultImages.removeAll()
             self.placeName.text = self.searchResults?.name
             self.placeRate.rating = Double(self.searchResults?.rateAvg ?? 3)
             self.shortDesc.text = self.searchResults?.shortDesc
@@ -76,7 +84,8 @@ class HomeCollectionViewCell:UICollectionViewCell{
             for setOfImage in self.searchResults!.images{
                 if  let url = URL(string: setOfImage.imageurl ){
                     if let imageData = try? Data(contentsOf: url){
-                        self.arraySearchResultImages.append(UIImage(data: imageData)!)
+                         array += [UIImage(data: imageData)!]
+                        self.arraySearchResultImages.append(array)
                     }
                 }
             }
@@ -86,11 +95,17 @@ class HomeCollectionViewCell:UICollectionViewCell{
     
     
     
+
+    @objc func changeImage(){
+        let desiredScrollPosition = (currentIndex < numberOfImages!.count - 1) ? currentIndex+1 : 0
+        colllectionViewImages.scrollToItem(at:IndexPath(item: desiredScrollPosition, section: 0), at: .centeredHorizontally, animated: true)
+      }
+    
+    
     @IBAction func createEvent(_ sender: UIButton) {
     }
     
-    @IBAction func isBookmarked(_ sender: UIButton) {
-    }
+  
     
     @IBAction func menu(_ sender: UIButton) {
     }
@@ -110,25 +125,17 @@ class HomeCollectionViewCell:UICollectionViewCell{
 extension HomeCollectionViewCell:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
        // print(arrrayOfImages.count)
-        if arrrayOfImages.count != 0{
-            return arrrayOfImages.count
-        }
-        else{
-            return arraySearchResultImages.count
-        }
-        
-        
+        return arraySearchResultImages.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = colllectionViewImages.dequeueReusableCell(withReuseIdentifier: "slideImages", for: indexPath) as! slideImageCollectionViewCell
-            
-        if arrrayOfImages.count != 0{
-                   cell.setImages = arrrayOfImages.remove(at: indexPath.row)
-               }
-               else{
-            cell.setImages = arraySearchResultImages[indexPath.row]
-               }
+       
+        
+        cell.setImages = arraySearchResultImages[indexPath.row]
+        
+        //numberOfImages = arraySearchResultImages[indexPath.row]
+
         return cell
     }
     
@@ -137,5 +144,21 @@ extension HomeCollectionViewCell:UICollectionViewDelegate,UICollectionViewDataSo
            let size=collectionView.frame.size
            return CGSize(width: size.width, height: size.height)
        }
+    
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        currentIndex = Int(scrollView.contentOffset.x / colllectionViewImages.frame.size.width)
+        pageControllE.currentPage = currentIndex
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    var collectionViewOffset: CGFloat {
+        set { colllectionViewImages.contentOffset.x = newValue }
+        get { return colllectionViewImages.contentOffset.x }
+    }
     
 }

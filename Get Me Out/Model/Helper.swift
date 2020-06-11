@@ -32,4 +32,17 @@ struct Helper{
         return nextViewController
     }
     
+    
+    static func searchBarCustomization(searchController:UISearchController)->UISearchController{
+        searchController.hidesNavigationBarDuringPresentation = true
+               searchController.searchBar.tintColor = UIColor.white
+               searchController.searchBar.barTintColor = UIColor.blue
+               let textFieldInsideSearchBar = searchController.searchBar.value(forKey: "searchField") as? UITextField
+               textFieldInsideSearchBar?.textColor = .black
+               textFieldInsideSearchBar?.backgroundColor = .white
+        return searchController
+    }
+    
 }
+
+

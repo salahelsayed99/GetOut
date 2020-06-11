@@ -64,8 +64,10 @@ extension UIView {
     
     func circle(){
         self.layer.cornerRadius = self.frame.size.height / 2
-
         self.layer.masksToBounds = true
     }
+    
+    
+  
     
 }

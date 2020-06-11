@@ -84,3 +84,60 @@ struct User1: Codable {
         case lang, active, id, jwt, imageurl, imageurlorg
     }
 }
+
+
+// MARK: - Cityes
+struct Cityes: Codable {
+    let cities: [City]
+    let statusCode: Int
+    let key: String
+
+    enum CodingKeys: String, CodingKey {
+        case cities
+        case statusCode = "status_code"
+        case key
+    }
+}
+
+// MARK: - City
+struct City: Codable {
+    let id, countryID: Int
+    let name: String
+    let country: Country
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case countryID = "country_id"
+        case name, country
+    }
+}
+
+// MARK: - Country
+struct Country: Codable {
+    let id: Int
+    let nameAr: NameAr
+    let nameEn: NameEn
+    let telKey: Int
+    let continent: Continent
+    let image: String
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case nameAr = "name_ar"
+        case nameEn = "name_en"
+        case telKey = "tel_key"
+        case continent, image
+    }
+}
+
+enum Continent: String, Codable {
+    case africa = "Africa"
+}
+
+enum NameAr: String, Codable {
+    case مصر = "مصر"
+}
+
+enum NameEn: String, Codable {
+    case egypt = "Egypt"
+}

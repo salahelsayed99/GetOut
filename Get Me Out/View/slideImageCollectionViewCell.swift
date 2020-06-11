@@ -9,7 +9,7 @@
 import UIKit
 
 class slideImageCollectionViewCell: UICollectionViewCell {
-    
+   
     @IBOutlet weak var images: UIImageView!
     
     @IBOutlet weak var bookmarkButton: UIButton!{
@@ -18,14 +18,19 @@ class slideImageCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    @IBOutlet weak var pageControl: UIPageControl!
+
     
     
     
-    var setImages:UIImage?{
+    var setImages:[UIImage]?{
         didSet{
-            images.image = self.setImages
+            for image in self.setImages!{
+            images.image = image
+            }
         }
     }
+  
+    
+  
     
 }

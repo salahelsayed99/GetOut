@@ -41,7 +41,7 @@ class CategoryElement: Codable {
 
 // MARK: - Places
 class Places: Codable {
-    let data: [Datum]
+    var data: [Datum]
     let perPage: Int
 
     enum CodingKeys: String, CodingKey {

@@ -20,7 +20,6 @@ protocol ButtonHandler {
 
 class ExplainTableViewCell: UITableViewCell {
     
-//var didSelectItemAction: ((Places) -> Void)?
     var cellDelegate:CollectionViewCellDelegate?
     var buttonDelegate:ButtonHandler?
     var places:CategoryHomeObject?{
@@ -36,7 +35,11 @@ class ExplainTableViewCell: UITableViewCell {
 
         }
     }
-    @IBOutlet private weak var collectionView: UICollectionView!
+    @IBOutlet private weak var collectionView: UICollectionView!{
+        didSet{
+            self.collectionView.contentOffset = .zero
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -45,9 +48,7 @@ class ExplainTableViewCell: UITableViewCell {
     }
 
     @IBAction func exploreMore(_ sender: UIButton) {
-        //nextViewController.data = places?.id (CategoryElement)
         if (places?.id) != nil{
-            //print(places?.id)
             buttonDelegate?.getId(id:places!.id, title: places!.name)
         }
     }
@@ -57,8 +58,9 @@ class ExplainTableViewCell: UITableViewCell {
 extension ExplainTableViewCell:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
 
 
-
-
+    
+    
+    
  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return places?.places.data.count ?? 0
     }
@@ -67,13 +69,13 @@ extension ExplainTableViewCell:UICollectionViewDelegate,UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CollectionCell", for: indexPath) as! ExplainCollectionViewCell
-        cell.data = places?.places.data[indexPath.item]
+        cell.data = places?.places.data[indexPath.row]
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        return CGSize(width:190, height: 140)
+        return CGSize(width:170, height: 150)
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -81,4 +83,12 @@ extension ExplainTableViewCell:UICollectionViewDelegate,UICollectionViewDataSour
                print("I'm tapping the \(indexPath.item)")
         self.cellDelegate?.collectionView(collectioncell: cell, index: indexPath.item, didTappedInTableview: self)
     }
+    
+    
+    
+    var collectionViewOffset: CGFloat {
+        set { collectionView.contentOffset.x = newValue }
+        get { return collectionView.contentOffset.x }
+    }
+
 }
