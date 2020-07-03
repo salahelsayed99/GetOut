@@ -315,7 +315,7 @@ open class UnderLineTextField: UITextField {
         }
     }
     /// placeholder color when textfield is not focused
-    @IBInspectable open var inactivePlaceholderTextColor: UIColor = .darkText {
+    @IBInspectable open var inactivePlaceholderTextColor: UIColor = .blue {
         didSet {
             if oldValue != inactivePlaceholderTextColor {
                 setNeedsDisplay()
@@ -323,7 +323,7 @@ open class UnderLineTextField: UITextField {
         }
     }
     /// line color when textfield is not focused
-    @IBInspectable open var inactiveLineColor: UIColor = .lightGray {
+    @IBInspectable open var inactiveLineColor: UIColor = .blue {
         didSet {
             if oldValue != inactiveLineColor {
                 setNeedsDisplay()
@@ -388,9 +388,9 @@ open class UnderLineTextField: UITextField {
         }
     }
     /// error label color when textfield have warning
-    @IBInspectable open var errorTextColor: UIColor = UIColor.yellow {
+    @IBInspectable open var errorTextColor: UIColor = UIColor.red {
         didSet {
-            if oldValue != warningTextColor {
+            if oldValue != self.errorTextColor {
                 setNeedsDisplay()
             }
         }

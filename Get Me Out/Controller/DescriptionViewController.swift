@@ -10,17 +10,53 @@ import UIKit
 import Cosmos
 
 class DescriptionViewController: UIViewController {
-  
     
-    
-    var data:Datum?{
+    // let descriptionPlaceViewModel = DescriptionPlaceViewModel()
+    var descriptionPlace:Place?{
         didSet{
-            print(self.data?.name ?? "error")
-            setData()
+            pageControl.numberOfPages = (descriptionPlace?.images.count)!
+             setData()
+        }
+    }
+    
+    func setData(){
+        placeDescription.text = descriptionPlace?.shortDesc
+        numberOfRaters.text = String(descriptionPlace!.numOfRater)
+        placeRateInDescription.rating = Double(descriptionPlace!.rateAvg)
+        namePlace.text = descriptionPlace?.name
+    }
+    
+
+    var recievedPlaceId:Int?{
+        didSet{
+            if let id = recievedPlaceId{
+                //descriptionPlaceViewModel.fetchData(id)
+                fetchData(id: id)
+            }
         }
     }
     
     
+    
+    func fetchData(id:Int){
+        Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/place?lang=ar&place_id=\(id)") { (data:PlaceDescription) in
+            if data.statusCode == 200{
+                print("HERE IS FETCH")
+                // self.passDataDelegate?.passData(data: data.place)
+                self.descriptionPlace = data.place
+                self.tableView.reloadData()
+                self.collectionView.reloadData()
+            }
+        }
+        
+    }
+    
+    var placeData:Place?{
+        didSet{
+            //collectionView.reloadData()
+            //tableView.reloadData()
+        }
+    }
     
     @IBOutlet weak var rateView: UIView!{
         didSet{
@@ -59,40 +95,29 @@ class DescriptionViewController: UIViewController {
     
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var tableView: UITableView!
-    
     @IBOutlet weak var numberOfRaters: UILabel!
     @IBOutlet weak var placeRateInDescription: CosmosView!
-    
     @IBOutlet weak var userRate: CosmosView!
     @IBOutlet weak var namePlace: UILabel!
-    var timer=Timer()
-    var counter=0
+    
+    var currentIndex = 0
+    var timer:Timer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        pageControl.numberOfPages=7
-        pageControl.currentPage=0
-        timer=Timer.scheduledTimer(timeInterval: 2.0, target: self, selector:#selector(changeImage), userInfo: nil, repeats: true)
         tableView.register(UINib(nibName:"CommentTableViewCell", bundle: nil), forCellReuseIdentifier: "Cell")
+        timer = Timer.scheduledTimer(timeInterval:  3.0, target: self, selector:#selector(changeImage), userInfo: nil, repeats: true)
     }
     
     @objc func changeImage(){
-        if counter<7{
-            let indexPath=IndexPath.init(item: counter, section: 0)
-            self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-            pageControl.currentPage=counter
-            counter=counter+1
-            
-        }
-        else{
-            counter=0
-            let indexPath=IndexPath.init(item: counter, section: 0)
-            self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: false)
-            pageControl.currentPage=counter
-            counter=1
-        }
+        let desiredScrollPosition = (currentIndex < (descriptionPlace?.images.count)! - 1) ? currentIndex+1 : 0
+        collectionView.scrollToItem(at:IndexPath(item: desiredScrollPosition, section: 0), at: .centeredHorizontally, animated: true)
     }
+    
+    
+    
+    
+    
     @IBAction func menuBtn(_ sender: Any) {
         //go to menu (undone) using collection view
     }
@@ -112,27 +137,19 @@ class DescriptionViewController: UIViewController {
         // go to fav (undone)
     }
     
-    func setData(){
-        DispatchQueue.main.async {
-            self.namePlace.text = self.data?.name
-            self.placeRateInDescription.rating = self.data?.rateAvg ?? 0
-            self.placeDescription.text = self.data?.shortDesc
-            self.numberOfRaters.text = "\(String(describing: self.data?.numOfRater))"
-        }
-       
-    }
-    
 }
 
 
 extension DescriptionViewController:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 7
+        return descriptionPlace?.images.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! DescriptionCollectionViewCell
+        print("HERE IS CODE" )
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! DescriptionCollectionViewCell
+        cell.image = descriptionPlace?.images[indexPath.row]
         return cell
     }
     
@@ -141,40 +158,43 @@ extension DescriptionViewController:UICollectionViewDelegate,UICollectionViewDat
         return CGSize(width: size.width, height: size.height)
     }
     
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-    //        return 0.0
-    //    }
-    //
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-    //        return 0.0
-    //    }
-    //
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-    //        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-    //    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+    
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        currentIndex = Int(scrollView.contentOffset.x / collectionView.frame.size.width)
+        pageControl.currentPage = currentIndex
+    }
+    
     
 }
 
 extension DescriptionViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return descriptionPlace?.rates.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! CommentTableViewCell
-        cell.label.text="nice place"
-        
+        cell.comments = descriptionPlace?.rates[indexPath.row]
         return cell
     }
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
     }
     
     
-    
-    
+}
+
+
+extension DescriptionViewController:passPlaceData{
+    func passData(data: Place) {
+        self.placeData = data
+        placeDescription.text = data.shortDesc
+    }
     
 }

@@ -11,14 +11,16 @@ import Lottie
 
 class SignInViewController: UIViewController,UITextFieldDelegate{
     let animationView = AnimationView()
-    
-    let service = Service()
+    let userDefault = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        startAnimation()
+        //startAnimation()
         emailTextField.setBottomBorder()
         passwordTextField.setBottomBorder()
+//        if userDefault.value(forKey: "userToken") != nil{
+//            present(Helper.goToTabBar(), animated: true, completion: nil)
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -46,9 +48,10 @@ class SignInViewController: UIViewController,UITextFieldDelegate{
         }
             
         else{
-            service.fetchSignInData(email: email, password: password) { (obj) in
+            Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/signin?email=\(email)&password=\(password)") { (obj:SignIn) in
                 if obj.statusCode == 200{
                     print("sucess")
+                    self.userDefault.set(obj.user.token.userID, forKey: "userToken")
                     //Helper.saveToken(token: obj.user.id)
                     self.present(Helper.goToTabBar(), animated: true, completion: nil)
                 }

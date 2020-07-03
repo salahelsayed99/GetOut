@@ -34,7 +34,7 @@ class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPicker
         currentLocationTextField.text = citiesArray[row].name
     }
     
-    
+    //MARK:-toolbar
     func createToolBar(){
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
@@ -54,7 +54,8 @@ class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPicker
         }
     }
     
-    func createURl(){
+    //MARK:-create url
+    func checkData(){
         guard let fullName = nameTextField.text else { return }
         guard let phone = phoneTextField.text else { return }
         guard let email = emailTextField.text else { return }
@@ -72,21 +73,17 @@ class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPicker
             }
             Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/signup?full_name=\(fullName)&email=\(email)&mobile=\(phone)&city_id=\(id)&password=\(password)") { (data:Signup) in
                 if data.statusCode == 200{
-                    self.present(Helper.goToTabBar(), animated: true, completion: nil)
+                self.present(Helper.goToTabBar(), animated: true, completion: nil)
                 }
             }
         }
     }
-    
-    
-    
     
     override func viewDidLoad() {
         citiesPicker.delegate = self
         currentLocationTextField.inputView = citiesPicker
         Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/cities") { (citiesData:Cityes) in
             if citiesData.statusCode == 200{
-                print("success1")
                 self.citiesArray = citiesData.cities
             }
             
@@ -96,7 +93,6 @@ class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPicker
     
     @IBOutlet weak var nameTextField:UnderLineTextField!{
         didSet{
-            // self.nameTextField.setBottomBorder()
             self.nameTextField.validationType = .afterEdit
             self.nameTextField.delegate = self
             
@@ -105,29 +101,25 @@ class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPicker
     
     @IBOutlet weak var phoneTextField: UnderLineTextField!{
         didSet{
-            //self.phoneTextField.setBottomBorder()
             self.phoneTextField.validationType = .afterEdit
-            self.nameTextField.delegate = self
+            self.phoneTextField.delegate = self
         }
     }
     @IBOutlet weak var emailTextField: UnderLineTextField!{
         didSet{
-            //self.emailTextField.setBottomBorder()
-            self.emailTextField.validationType = .afterEdit
+            self.emailTextField.validationType = .always
             self.emailTextField.delegate = self
         }
     }
     @IBOutlet weak var currentLocationTextField: UnderLineTextField!{
         didSet{
-            //self.currentLocationTextField.setBottomBorder()
             self.currentLocationTextField.validationType = .afterEdit
             self.currentLocationTextField.delegate = self
         }
     }
     @IBOutlet weak var passwordTextField: UnderLineTextField!{
         didSet{
-            //self.passwordTextField.setBottomBorder()
-            self.passwordTextField.validationType = .afterEdit
+            self.passwordTextField.validationType = .always
             self.passwordTextField.delegate = self
         }
     }
@@ -135,21 +127,22 @@ class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPicker
     func textFieldValidate(underLineTextField: UnderLineTextField) throws{
         if underLineTextField.text?.count == 0{
             throw UnderLineTextFieldErrors
-                
-                .error(message: "Please fill the field")
-            
+                .error(message: "please fill the field")
         }
         switch underLineTextField {
         case passwordTextField:
             throw UnderLineTextFieldErrors
-                
                 .warning(message: "The password must be from 7 to 17 character")
+        case emailTextField:
+            throw UnderLineTextFieldErrors
+                .warning(message: "email should contain @ and .com")
         default:
             return
         }
     }
     
     @IBAction func createAcoount(_ sender: UIButton) {
-        createURl()}
+        checkData()
+    }
 }
 

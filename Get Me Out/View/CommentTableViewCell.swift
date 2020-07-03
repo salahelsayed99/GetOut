@@ -24,4 +24,21 @@ class CommentTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    
+    
+    var comments:Rate?{
+        didSet{
+           setData()
+        }
+    }
+    
+    
+    func setData(){
+        label.text = comments?.comment
+        if  let url = URL(string: (comments?.user.imageurl)! ){
+                          if let imageData = try? Data(contentsOf: url){
+                                  self.myImage.image = UIImage(data: imageData)
+                          }
+                      }
+    }
 }

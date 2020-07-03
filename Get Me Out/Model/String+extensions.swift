@@ -15,4 +15,9 @@ extension String{
        return self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
     
-}
+        var isInt: Bool {
+            return Int(self) != nil
+        }
+    
+    }
+

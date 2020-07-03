@@ -30,14 +30,14 @@ class ExplainCollectionViewCell: UICollectionViewCell {
     func setData(){
         if  let url = URL(string: data!.imageurl ){
         if let imageData = try? Data(contentsOf: url){
-            DispatchQueue.main.async {
                 self.imagePlace.image = UIImage(data: imageData)
                 self.namePlace.text = self.data?.name
                 self.ratePlace.rating = self.data?.rateAvg ?? 0
-            }
             
         }
     }
+        
+        self.addShadow()
 }
 
     

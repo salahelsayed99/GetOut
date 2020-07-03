@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -57,13 +57,13 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="bubbleMessage" destination="HwV-He-Bbd" id="G1G-gy-xto"/>
-                <outlet property="imageView" destination="gFB-Qn-0ez" id="ynr-sd-suN"/>
                 <outlet property="label" destination="kOA-cY-8Mj" id="c3C-Md-Nck"/>
+                <outlet property="myImage" destination="gFB-Qn-0ez" id="78d-TP-eeS"/>
             </connections>
             <point key="canvasLocation" x="176.81159420289856" y="134.26339285714286"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="person.fill" catalog="system" width="64" height="60"/>
+        <image name="person.fill" catalog="system" width="128" height="120"/>
     </resources>
 </document>

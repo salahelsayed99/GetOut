@@ -14,7 +14,7 @@ class HomeViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     var storedOffsets = [Int: CGFloat]()
-
+    
     var searchResult=[SearchDataModel]()
     let searchController = UISearchController(searchResultsController: nil)
     
@@ -23,20 +23,20 @@ class HomeViewController: UIViewController {
             searchResult.removeAll()
             if let searchTarget = self.BeginSearch{
                 DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                DispatchQueue.main.async {
-                    Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/search?lang=ar&name=\(searchTarget)") { (info:SearchInformation) in
-                        if info.statusCode == 200{
-                            print("move to explore using search bar ")
-                            for searchResult in info.places.data{
-                                let newSearchResultObj = SearchDataModel(id: searchResult.id!, name: searchResult.name, rateAvg:Int(searchResult.rateAvg), numOfRater: searchResult.numOfRater, latitude: searchResult.latitude, longitude: searchResult.longitude, shortDesc: searchResult.shortDesc, address: searchResult.address, imageurl: searchResult.imageurl, isbookmarked: searchResult.isbookmarked, dashboardurl: searchResult.dashboardurl, images: searchResult.images)
-                                self?.searchResult.append(newSearchResultObj)
+                    DispatchQueue.main.async {
+                        Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/search?lang=ar&name=\(searchTarget)") { (info:SearchInformation) in
+                            if info.statusCode == 200{
+                                print("move to explore using search bar ")
+                                for searchResult in info.places.data{
+                                    let newSearchResultObj = SearchDataModel(id: searchResult.id!, name: searchResult.name, rateAvg:Int(searchResult.rateAvg), numOfRater: searchResult.numOfRater, latitude: searchResult.latitude, longitude: searchResult.longitude, shortDesc: searchResult.shortDesc, address: searchResult.address, imageurl: searchResult.imageurl, isbookmarked: searchResult.isbookmarked, dashboardurl: searchResult.dashboardurl, images: searchResult.images)
+                                    self?.searchResult.append(newSearchResultObj)
+                                }
+                                self?.collectionView.reloadData()
                             }
-                            self?.collectionView.reloadData()
+                            
                         }
-                        
                     }
                 }
-            }
             }
         }
     }
@@ -57,8 +57,8 @@ class HomeViewController: UIViewController {
         collectionView.collectionViewLayout = flowLayout
     }
     
-  
-        
+    
+    
     @IBAction func searchBarButton(_ sender: Any) {
         present(Helper.searchBarCustomization(searchController: searchController), animated: true, completion: nil)
     }
@@ -69,13 +69,12 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController:UICollectionViewDataSource,UICollectionViewDelegate{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //print(recievedData?.count)
-            return searchResult.count
+        return searchResult.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeCollectionViewCell", for: indexPath) as! HomeCollectionViewCell
-         cell.collectionViewOffset = storedOffsets[indexPath.row] ?? 0
+        cell.collectionViewOffset = storedOffsets[indexPath.row] ?? 0
         cell.searchResults = searchResult[indexPath.row]
         cell.numberOfImages = searchResult[indexPath.row].images
         return cell
@@ -86,8 +85,8 @@ extension HomeViewController:UICollectionViewDataSource,UICollectionViewDelegate
     }
     
     func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-                 guard let collectionCell = cell as? HomeCollectionViewCell else { return }
-                 storedOffsets[indexPath.row] = collectionCell.collectionViewOffset
+        guard let collectionCell = cell as? HomeCollectionViewCell else { return }
+        storedOffsets[indexPath.row] = collectionCell.collectionViewOffset
     }
     
 }
@@ -96,8 +95,8 @@ extension HomeViewController:UICollectionViewDataSource,UICollectionViewDelegate
 extension HomeViewController:UISearchBarDelegate{
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-           BeginSearch = searchBar.text
-
+        BeginSearch = searchBar.text
+        
     }
     
 }

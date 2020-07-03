@@ -13,11 +13,13 @@ class HomeCollectionViewCell:UICollectionViewCell{
     
     override func awakeFromNib() {
       timer = Timer.scheduledTimer(timeInterval:  3.0, target: self, selector:#selector(changeImage), userInfo: nil, repeats: true)
+        self.rounded()
             }
     
     
     var currentIndex = 0
     var timer:Timer?
+    
     var numberOfImages:[Image]?{
         didSet{
             pageControllE.numberOfPages = self.numberOfImages!.count
@@ -45,6 +47,7 @@ class HomeCollectionViewCell:UICollectionViewCell{
     var arraySearchResultImages = [[UIImage]]()
     
     var array = [UIImage]()
+    
     @IBOutlet weak var viewContainingButtons: UIView!{
         didSet{
             self.viewContainingButtons.rounded()
@@ -134,8 +137,7 @@ extension HomeCollectionViewCell:UICollectionViewDelegate,UICollectionViewDataSo
         
         cell.setImages = arraySearchResultImages[indexPath.row]
         
-        //numberOfImages = arraySearchResultImages[indexPath.row]
-
+        
         return cell
     }
     

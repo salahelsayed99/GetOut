@@ -138,8 +138,22 @@ extension ExploreViewController:UICollectionViewDelegate,UICollectionViewDataSou
         
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "fromExploreToDescription", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "fromExploreToDescription"{
+            if let dvc = segue.destination as? DescriptionViewController{
+                 let indexpath = collectionView.indexPathsForSelectedItems
+                if let selectedIndexPath = indexpath?.first{
+                    dvc.recievedPlaceId = recievedData[selectedIndexPath.row].id
+                }
+        }
+    }
 }
-
+}
 extension ExploreViewController:UICollectionViewDelegateFlowLayout{
 
    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {

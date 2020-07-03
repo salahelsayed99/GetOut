@@ -7,14 +7,20 @@
 //
 
 import UIKit
-import Social
 
 class CEventViewController: UIViewController {
     @IBOutlet weak var eventImage: UIImageView!
     @IBOutlet weak var eventName: UITextField!
-    @IBOutlet weak var eventDetail: UITextField!
     @IBOutlet weak var eventPlaceName: UILabel!
     @IBOutlet weak var datePicker: UIDatePicker!
+    @IBOutlet weak var descriptionTextView: UITextView!{
+        didSet{
+            let borderColor : UIColor = UIColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0)
+            descriptionTextView.layer.borderWidth = 0.5
+            descriptionTextView.layer.borderColor = borderColor.cgColor
+            descriptionTextView.layer.cornerRadius = 5.0
+        }
+    }
     
     @IBOutlet weak var shareFacebook: UIButton!{
         didSet{
@@ -34,13 +40,7 @@ class CEventViewController: UIViewController {
         showChooseSourceTypeAlertController()
     }
     
-    @IBAction func shareFaceBook(_ sender: UIButton) {
-        let vc = UIActivityViewController(activityItems: [url!], applicationActivities: nil)
-        //print("done")
-        present(vc, animated: true, completion: nil)
-        
-        
-    }
+ 
     
     @IBAction func valueChanged(sender:UIDatePicker,forEvent event: UIEvent ){
         let month = sender.date.getYearMonthDayHourMinute().month
@@ -49,6 +49,15 @@ class CEventViewController: UIViewController {
         let minute = sender.date.getYearMonthDayHourMinute().minute
          print(month,day,hour,minute)
     }
+    
+    
+    @IBAction func shareEvent(_ sender: UIButton) {
+        let vc = UIActivityViewController(activityItems: [url!], applicationActivities: nil)
+               //print("done")
+               present(vc, animated: true, completion: nil)
+        
+    }
+    
     
 }
 

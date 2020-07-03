@@ -19,9 +19,6 @@ class slideImageCollectionViewCell: UICollectionViewCell {
     }
     
 
-    
-    
-    
     var setImages:[UIImage]?{
         didSet{
             for image in self.setImages!{

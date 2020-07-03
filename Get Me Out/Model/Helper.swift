@@ -11,18 +11,17 @@ import UIKit
 
 struct Helper{
     
-    let window:UIWindow?
     
     
-    static func saveToken(token:Int){
-        let userDefault = UserDefaults.standard
-        userDefault.set(token, forKey: "userToken")
-    }
-    
-    static func fetchToken()->Int?{
-        let userDefault = UserDefaults.standard
-        return userDefault.object(forKey: "userToken") as? Int
-    }
+//    static func saveToken(token:Int){
+//        let userDefault = UserDefaults.standard
+//        userDefault.set(token, forKey: "userToken")
+//    }
+//    
+//    static func fetchToken()->Int?{
+//        let userDefault = UserDefaults.standard
+//        return userDefault.object(forKey: "userToken") as? Int
+//    }
     
     
     static func goToTabBar()->UIViewController{

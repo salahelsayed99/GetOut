@@ -8,17 +8,20 @@
 
 import UIKit
 
-class ExplainTableViewController: UITableViewController{
-    var categories = [CategoryHomeObject]()
+class ExplainTableViewController:UIViewController,UITableViewDataSource,UITableViewDelegate{
+    var categories = [CategoryElement]()
     var storedOffsets = [Int: CGFloat]()
 
-
+    @IBOutlet var rateView: UIView!
+    @IBOutlet var tableView: UITableView!
     var textIntoSearchBar:String?
-    @IBOutlet weak var collectionView: UICollectionView!
-    
-    var id:Int?
-    var name:String?
-    
+    var categoryId:Int?
+    var categoryName:String?
+    var placeId:Int?{
+        didSet{
+            print("wasal")
+        }
+    }
     let searchController = UISearchController(searchResultsController: nil)
     
     
@@ -27,8 +30,12 @@ class ExplainTableViewController: UITableViewController{
     override func viewDidLoad() {
         searchController.searchBar.delegate = self
         super.viewDidLoad()
+        //setRateView()
         tableView.separatorStyle = .none
+        tableView.dataSource = self
+        tableView.delegate = self
         fetchData()
+    
     }
     
     
@@ -37,16 +44,31 @@ class ExplainTableViewController: UITableViewController{
             DispatchQueue.main.async {
                 Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/home_categories?lang=ar") { (info:Category) in
                     if info.statusCode == 200{
-                        for category in info.categories{
-                            let newCategory = CategoryHomeObject(id: category.id, seeMoreAPIURL: category.seeMoreAPIURL, image: category.image, name: category.name, shortDesc: category.shortDesc, imageurl: category.imageurl, places: category.places)
-                            self?.categories.append(newCategory)
-                        }
+                        self?.categories = info.categories
                         self?.tableView.reloadData()
                     }
                 }
                 
             }
         }
+    }
+    
+    
+    
+    //MARK:-RateView
+    
+    func setRateView(){
+        let blurEffect = UIBlurEffect(style: .light)
+        let blurredEffectView = UIVisualEffectView(effect: blurEffect)
+        blurredEffectView.frame = view.bounds
+        blurredEffectView.isHidden = false
+        view.addSubview(blurredEffectView)
+        //rateView.transform = CGAffineTransform.init(scaleX: 1.3, y: 1.3)
+        rateView.center.x = self.view.center.x // for horizontal
+        rateView.center.y = self.view.center.y // for vertical
+        rateView.layer.cornerRadius = 8
+        rateView.isHidden = false
+        view.addSubview(rateView)
     }
     
     
@@ -78,18 +100,15 @@ class ExplainTableViewController: UITableViewController{
     }
     
     
-    
-    
-    
     // MARK: - Table view data source
     
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories.count
     }
     
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ExplainTableViewCell
         cell.places = categories[indexPath.row]
         cell.collectionViewOffset = storedOffsets[indexPath.row] ?? 0
@@ -102,28 +121,37 @@ class ExplainTableViewController: UITableViewController{
     // MARK: - Table view delegate
     
     
-    override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    
+     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+
+           guard let tableViewCell = cell as? ExplainTableViewCell else { return }
+           tableViewCell.collectionViewOffset = storedOffsets[indexPath.row] ?? 0
+       }
+
+    
+     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
          guard let tableViewCell = cell as? ExplainTableViewCell else { return }
                storedOffsets[indexPath.row] = tableViewCell.collectionViewOffset
     }
     
     
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 210
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // tableView.deselectRow(at: indexPath, animated: true)
-        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+  
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToExplore"{
             if let destinationVc = segue.destination as? ExploreViewController{
-                if let data = self.id{
+                if let data = self.categoryId{
                     destinationVc.data = data
-                    destinationVc.name = name
+                    destinationVc.name = categoryName
                 }
             }
             
@@ -133,19 +161,30 @@ class ExplainTableViewController: UITableViewController{
                 dVC.BeginSearch = textIntoSearchBar
                 searchController.isActive = false
             }
-            
+        }
+        
+        if segue.identifier == "goToDescription"{
+            if let dvc = segue.destination as? DescriptionViewController{
+                dvc.recievedPlaceId = placeId
+            }
         }
     }
 }
 
 
 extension ExplainTableViewController:ButtonHandler{
+    func passPlaceId(placeId: Int) {
+        self.placeId = placeId
+        performSegue(withIdentifier: "goToDescription", sender: self)
+    }
+    
     func getId(id: Int, title: String) {
-        self.id = id
-        self.name = title
+        self.categoryId = id
+        self.categoryName = title
         performSegue(withIdentifier: "goToExplore", sender: self)
     }
 }
+
 
 
 
@@ -158,6 +197,9 @@ extension ExplainTableViewController:UISearchBarDelegate{
     }
     
 }
+
+
+
 
 
 

@@ -8,21 +8,20 @@
 
 import UIKit
 
-protocol CollectionViewCellDelegate: class {
-     func collectionView(collectioncell:ExplainCollectionViewCell?,index: Int,didTappedInTableview TableCell:ExplainTableViewCell)
-    // other delegate methods that you can define to perform action in viewcontroller
-}
 
 protocol ButtonHandler {
     func getId(id:Int,title:String)
+    func passPlaceId(placeId:Int)
 }
 
 
 class ExplainTableViewCell: UITableViewCell {
     
-    var cellDelegate:CollectionViewCellDelegate?
     var buttonDelegate:ButtonHandler?
-    var places:CategoryHomeObject?{
+    
+    
+    
+    var places:CategoryElement?{
         didSet{
             categoryName.text = self.places?.name
             collectionView.reloadData()
@@ -35,12 +34,7 @@ class ExplainTableViewCell: UITableViewCell {
 
         }
     }
-    @IBOutlet private weak var collectionView: UICollectionView!{
-        didSet{
-            self.collectionView.contentOffset = .zero
-        }
-    }
-    
+    @IBOutlet private weak var collectionView: UICollectionView!
     override func awakeFromNib() {
         super.awakeFromNib()
         collectionView.delegate = self
@@ -52,14 +46,19 @@ class ExplainTableViewCell: UITableViewCell {
             buttonDelegate?.getId(id:places!.id, title: places!.name)
         }
     }
+    
+    var collectionViewOffset: CGFloat {
+        set { collectionView.contentOffset.x = newValue }
+        get { return collectionView.contentOffset.x }
+    }
+    
+    
+
 }
 
 
 extension ExplainTableViewCell:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
 
-
-    
-    
     
  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return places?.places.data.count ?? 0
@@ -79,16 +78,11 @@ extension ExplainTableViewCell:UICollectionViewDelegate,UICollectionViewDataSour
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? ExplainCollectionViewCell
-               print("I'm tapping the \(indexPath.item)")
-        self.cellDelegate?.collectionView(collectioncell: cell, index: indexPath.item, didTappedInTableview: self)
+        let id = places?.places.data[indexPath.row].id
+        buttonDelegate?.passPlaceId(placeId: id!)
+        print(id!)
     }
     
     
-    
-    var collectionViewOffset: CGFloat {
-        set { collectionView.contentOffset.x = newValue }
-        get { return collectionView.contentOffset.x }
-    }
 
 }

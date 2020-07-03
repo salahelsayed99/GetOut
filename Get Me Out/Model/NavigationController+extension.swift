@@ -14,10 +14,7 @@ extension UINavigationBar{
     }
     
     func firstViewAfterTabBar(){
-        //self.tintColor = .white
-        //self.barTintColor = .blue
         self.prefersLargeTitles = true
-        //self.largeTitleTextAttributes
         self.sizeToFit()
     }
     
