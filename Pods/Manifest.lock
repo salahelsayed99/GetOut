@@ -1,24 +1,28 @@
 PODS:
   - Cosmos (21.0.0)
+  - IQKeyboardManagerSwift (6.5.5)
   - lottie-ios (3.1.8)
   - UnderLineTextField (2.1.0)
 
 DEPENDENCIES:
   - Cosmos (~> 21.0)
+  - IQKeyboardManagerSwift
   - lottie-ios
   - UnderLineTextField (~> 2.1)
 
 SPEC REPOS:
   trunk:
     - Cosmos
+    - IQKeyboardManagerSwift
     - lottie-ios
     - UnderLineTextField
 
 SPEC CHECKSUMS:
   Cosmos: 3dfb6e4ba48bd48b8c9aa2a77048ae11ed114f96
+  IQKeyboardManagerSwift: 0fb93310284665245591f50f7a5e38de615960b7
   lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
   UnderLineTextField: b3f5307b56962331e30a965e81b79aae2df1de83
 
-PODFILE CHECKSUM: 04acd0cf5e6235990fc9b27766a8206411729e11
+PODFILE CHECKSUM: f503e29588efb1238f28b277de2dd1e06ff1abb1
 
 COCOAPODS: 1.8.4

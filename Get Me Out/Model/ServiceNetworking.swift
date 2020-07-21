@@ -16,11 +16,14 @@ struct Service {
     
     func fetchGenericData<T: Decodable>(urlString: String, completion: @escaping (T) -> ()) {
         guard let url = URL(string: urlString) else { return }
+
+            
         URLSession.shared.dataTask(with: url) { (data, _, err) in
             if let err = err {
                 print("Failed to fetch home feed:", err)
                 return
             }
+        
             
             guard let data = data else { return }
             do {

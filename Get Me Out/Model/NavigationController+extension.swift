@@ -21,7 +21,7 @@ extension UINavigationBar{
     func secondaryViewController(){
         self.prefersLargeTitles = false
         self.tintColor = .white
-        self.barTintColor = .blue
+        self.barTintColor = .link
     }
 }
 

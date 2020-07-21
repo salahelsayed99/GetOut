@@ -14,10 +14,9 @@ extension UITabBar{
         self.isHidden = true
     }
     
-    
     func firstViewAfterTabBar(){
           self.tintColor = .white
-          self.barTintColor = .blue
+        self.barTintColor = .link
       }
     
     

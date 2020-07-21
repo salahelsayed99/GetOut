@@ -9,7 +9,9 @@
 import UIKit
 
 class SettingsViewController: UITableViewController {
-
+    
+    let userDefault = UserDefaults.standard
+       
   
     var settings = [Settings]()
     
@@ -50,11 +52,15 @@ class SettingsViewController: UITableViewController {
         case 0:
             performSegue(withIdentifier: "", sender: self)
         case 1:
-            performSegue(withIdentifier: "", sender: self)
+            performSegue(withIdentifier: "goToEdit", sender: self)
         case 2:
             performSegue(withIdentifier: "goToEdit", sender: self)
         case 3:
-            performSegue(withIdentifier: "", sender: self)
+            userDefault.removeObject(forKey: "userToken")
+            let storyBoard : UIStoryboard = UIStoryboard(name: "Main", bundle:nil)
+            let nextViewController = storyBoard.instantiateViewController(withIdentifier: "first") as!UINavigationController
+            nextViewController.modalPresentationStyle = .fullScreen
+             self.present(nextViewController, animated: true, completion: nil)
         default:
             performSegue(withIdentifier: "", sender: self)
         }

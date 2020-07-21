@@ -115,6 +115,11 @@ class DescriptionViewController: UIViewController {
     }
     
     
+    @IBAction func choosePlace(_ sender: UIButton) {
+//        Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/choose_place", completion: <#T##(Decodable) -> ()#>)
+    }
+    
+    
     
     
     
@@ -186,6 +191,8 @@ extension DescriptionViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
     }
+    
+    
     
     
 }

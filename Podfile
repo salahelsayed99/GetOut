@@ -9,5 +9,6 @@ target 'Get Me Out' do
 pod 'Cosmos', '~> 21.0'
 pod 'lottie-ios'
 pod 'UnderLineTextField', '~> 2.1'
+pod 'IQKeyboardManagerSwift'
 
 end
