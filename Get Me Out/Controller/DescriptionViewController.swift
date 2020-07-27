@@ -11,52 +11,43 @@ import Cosmos
 
 class DescriptionViewController: UIViewController {
     
-    // let descriptionPlaceViewModel = DescriptionPlaceViewModel()
-    var descriptionPlace:Place?{
+    var placeDescriptionViewModelController = PlaceDescriptionViewModelController()
+    var helper = Helper()
+    
+    var recievedPlaceId:Int?{
+         didSet{
+             if let id = recievedPlaceId{
+                 placeDescriptionViewModelController.fetchData(id: id)
+             }
+         }
+     }
+    
+    var descriptionPlace:PlaceDescriptionViewModel?{
         didSet{
             pageControl.numberOfPages = (descriptionPlace?.images.count)!
-             setData()
+            setData()
         }
     }
     
     func setData(){
-        placeDescription.text = descriptionPlace?.shortDesc
-        numberOfRaters.text = String(descriptionPlace!.numOfRater)
-        placeRateInDescription.rating = Double(descriptionPlace!.rateAvg)
-        namePlace.text = descriptionPlace?.name
+        DispatchQueue.main.async {
+            self.placeDescription.text = self.descriptionPlace?.shortDesc
+            self.numberOfRaters.text = String(self.descriptionPlace!.numOfRater)
+            self.placeRateInDescription.rating = Double(self.descriptionPlace!.rateAvg)
+            self.namePlace.text = self.descriptionPlace?.name
+        }
     }
     
 
-    var recievedPlaceId:Int?{
-        didSet{
-            if let id = recievedPlaceId{
-                //descriptionPlaceViewModel.fetchData(id)
-                fetchData(id: id)
-            }
-        }
+ 
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        placeDescriptionViewModelController.delegate = self
     }
     
     
     
-    func fetchData(id:Int){
-        Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/place?lang=ar&place_id=\(id)") { (data:PlaceDescription) in
-            if data.statusCode == 200{
-                print("HERE IS FETCH")
-                // self.passDataDelegate?.passData(data: data.place)
-                self.descriptionPlace = data.place
-                self.tableView.reloadData()
-                self.collectionView.reloadData()
-            }
-        }
-        
-    }
-    
-    var placeData:Place?{
-        didSet{
-            //collectionView.reloadData()
-            //tableView.reloadData()
-        }
-    }
     
     @IBOutlet weak var rateView: UIView!{
         didSet{
@@ -106,18 +97,16 @@ class DescriptionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(UINib(nibName:"CommentTableViewCell", bundle: nil), forCellReuseIdentifier: "Cell")
-        timer = Timer.scheduledTimer(timeInterval:  3.0, target: self, selector:#selector(changeImage), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval:  1.0, target: self, selector:#selector(changeImage), userInfo: nil, repeats: true)
     }
     
     @objc func changeImage(){
         let desiredScrollPosition = (currentIndex < (descriptionPlace?.images.count)! - 1) ? currentIndex+1 : 0
-        collectionView.scrollToItem(at:IndexPath(item: desiredScrollPosition, section: 0), at: .centeredHorizontally, animated: true)
+        collectionView.scrollToItem(at:IndexPath(item: desiredScrollPosition, section: 0), at: .centeredHorizontally, animated: true)  
     }
     
     
-    @IBAction func choosePlace(_ sender: UIButton) {
-//        Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/choose_place", completion: <#T##(Decodable) -> ()#>)
-    }
+    
     
     
     
@@ -132,7 +121,7 @@ class DescriptionViewController: UIViewController {
     }
     
     @IBAction func callBtn(_ sender: Any) {
-        let numberInString = String(01020650948) //
+        let numberInString = String(descriptionPlace!.mobile) //
         if let url = URL(string: "telprompt://\(numberInString)"){
             UIApplication.shared.open(url)
         }
@@ -152,7 +141,6 @@ extension DescriptionViewController:UICollectionViewDelegate,UICollectionViewDat
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        print("HERE IS CODE" )
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as! DescriptionCollectionViewCell
         cell.image = descriptionPlace?.images[indexPath.row]
         return cell
@@ -192,16 +180,17 @@ extension DescriptionViewController:UITableViewDelegate,UITableViewDataSource{
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
-    
-    
-    
 }
 
 
-extension DescriptionViewController:passPlaceData{
-    func passData(data: Place) {
-        self.placeData = data
-        placeDescription.text = data.shortDesc
+extension DescriptionViewController:PlaceDescriptionViewModelControllerDelegate{
+    func sendPlaceDescriptionData(_ data: PlaceDescriptionViewModel) {
+        descriptionPlace = data
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+            self.collectionView.reloadData()
+        }
     }
+    
     
 }

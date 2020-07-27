@@ -9,13 +9,28 @@
 import UIKit
 import UnderLineTextField
 
-class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate {
+class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate,SignUpViewModelDelegate{
+    func permisionToContinue(_ per: Bool) {
+        permission = per
+    }
+    
+    
+    var signUpViewModel = SignUpViewModelController()
+    
+    
+    
+    func passCities(_ data: [City]) {
+        citiesArray = data
+    }
+    
+ 
+   
+  
     
     //MARK:- UIPickerView Stuff
     var citiesArray = [City]()
-    
     var cityID:Int? = nil
-    
+    var permission = false
     let citiesPicker = UIPickerView()
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -34,19 +49,8 @@ class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPicker
         currentLocationTextField.text = citiesArray[row].name
     }
     
-    //MARK:-toolbar
-    func createToolBar(){
-        let toolBar = UIToolbar()
-        toolBar.sizeToFit()
-        let doneButton = UIBarButtonItem(title: "Done", style: .plain, target: self, action: #selector(dismissPickerView))
-        toolBar.setItems([doneButton], animated: false)
-        toolBar.isUserInteractionEnabled = true
-        currentLocationTextField.inputAccessoryView = toolBar
-    }
-    
-    @objc func dismissPickerView(){
-        view.endEditing(true)
-    }
+
+  
     
     @IBOutlet weak var createButton: UIButton!{
         didSet{
@@ -55,40 +59,35 @@ class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPicker
     }
     
     //MARK:-create url
-    func checkData(){
-        guard let fullName = nameTextField.text else { return }
-        guard let phone = phoneTextField.text else { return }
-        guard let email = emailTextField.text else { return }
-        guard let location = currentLocationTextField.text else { return }
-        guard let password = passwordTextField.text else { return }
+    func checkValidation(){
+        guard let fullName = nameTextField.text,let phone = phoneTextField.text,let email = emailTextField.text,let location = currentLocationTextField.text,let password = passwordTextField.text else { return }
         
-        if fullName.isEmpty || phone.isEmpty || email.isEmpty || location.isEmpty || password.isEmpty{
+        if !signUpViewModel.checkFillFields(fullName: fullName, location: location, password: password, phone: phone, email: email){
             let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             let alert = AlertService.showAlert(style: .alert, title: "Please fill all fields", message: nil, actions: [alertAction], completion: nil)
             present(alert, animated: true, completion: nil)
         }
         else{
-            guard let id = cityID else {
-                fatalError()
-            }
-            Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/signup?full_name=\(fullName)&email=\(email)&mobile=\(phone)&city_id=\(id)&password=\(password)") { (data:Signup) in
-                if data.statusCode == 200{
-                self.present(Helper.goToTabBar(), animated: true, completion: nil)
+            if let id = cityID  {
+                signUpViewModel.createUrl(fullName: fullName, email: email, phone: phone, cityID: id, password: password)
+                if permission{
+                      present(Helper.goToTabBar(), animated: true, completion: nil)
+
+                }else{
+                    let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    let alert = AlertService.showAlert(style: .alert, title: "Something Went wrong try again", message: nil, actions: [alertAction], completion: nil)
+                    present(alert, animated: true, completion: nil)
+                    
                 }
-            }
-        }
-    }
-    
-    override func viewDidLoad() {
-        citiesPicker.delegate = self
-        currentLocationTextField.inputView = citiesPicker
-        Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/cities") { (citiesData:Cityes) in
-            if citiesData.statusCode == 200{
-                self.citiesArray = citiesData.cities
-            }
             
         }
-        createToolBar()
+    }
+    }
+    override func viewDidLoad() {
+        signUpViewModel.delegate = self
+        citiesPicker.delegate = self
+        signUpViewModel.getCityID()
+        currentLocationTextField.inputView = citiesPicker
     }
     
     @IBOutlet weak var nameTextField:UnderLineTextField!{
@@ -142,7 +141,12 @@ class SignUpViewController: UIViewController,UnderLineTextFieldDelegate,UIPicker
     }
     
     @IBAction func createAcoount(_ sender: UIButton) {
-        checkData()
+        checkValidation()
     }
 }
+
+
+
+  
+    
 

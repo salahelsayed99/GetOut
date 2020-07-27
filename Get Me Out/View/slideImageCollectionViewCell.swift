@@ -19,10 +19,11 @@ class slideImageCollectionViewCell: UICollectionViewCell {
     }
     
 
-    var setImages:[UIImage]?{
+    var setImages:[Image]?{
         didSet{
             for image in self.setImages!{
-            images.image = image
+                let url = URL(string: image.imageurl)
+                images.kf.setImage(with: url)
             }
         }
     }

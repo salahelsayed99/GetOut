@@ -8,6 +8,7 @@
 
 import UIKit
 import Cosmos
+import Kingfisher
 
 class ExploreCollectionViewCell: UICollectionViewCell {
     
@@ -17,23 +18,22 @@ class ExploreCollectionViewCell: UICollectionViewCell {
     
  
     
-    var data:DatumEObject?{
+    var data:ExploreViewModel?{
+        
            didSet{didupdate()}
        }
     
     func didupdate(){
-        if  let url = URL(string: self.data!.imageurl ){
-                    if let imageData = try? Data(contentsOf: url){
-                DispatchQueue.main.async {
-                 self.categoryImage.image = UIImage(data: imageData)
+                    let url = URL(string: self.data!.imageurl)
+                    categoryImage.kf.setImage(with: url)
                     self.name.text = self.data?.name
                     self.rate.rating = self.data?.rateAvg ?? 0
-                 }
-            }
-        }
+              
+            
+     
         contentView.backgroundColor = .white
         self.addShadow()
-        
+    }
     }
     
-}
+

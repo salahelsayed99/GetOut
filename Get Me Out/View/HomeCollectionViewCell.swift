@@ -12,9 +12,9 @@ import Cosmos
 class HomeCollectionViewCell:UICollectionViewCell{
     
     override func awakeFromNib() {
-      timer = Timer.scheduledTimer(timeInterval:  3.0, target: self, selector:#selector(changeImage), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval:  3.0, target: self, selector:#selector(changeImage), userInfo: nil, repeats: true)
         self.rounded()
-            }
+    }
     
     
     var currentIndex = 0
@@ -43,10 +43,9 @@ class HomeCollectionViewCell:UICollectionViewCell{
             self.colllectionViewImages.dataSource = self
         }
     }
-        
+    
     var arraySearchResultImages = [[UIImage]]()
     
-    var array = [UIImage]()
     
     @IBOutlet weak var viewContainingButtons: UIView!{
         didSet{
@@ -75,40 +74,36 @@ class HomeCollectionViewCell:UICollectionViewCell{
             self.shortDesc.isEditable = false
         }
     }
-        
     
-    var searchResults:SearchDataModel?{
+    
+    var searchResults:SearchViewModel?{
         didSet{
-            arraySearchResultImages.removeAll()
-            self.placeName.text = self.searchResults?.name
-            self.placeRate.rating = Double(self.searchResults?.rateAvg ?? 3)
-            self.shortDesc.text = self.searchResults?.shortDesc
-            self.numberOfRaters.text = String("\(self.searchResults?.numOfRater ?? 0) peoples Rate this place")
-            for setOfImage in self.searchResults!.images{
-                if  let url = URL(string: setOfImage.imageurl ){
-                    if let imageData = try? Data(contentsOf: url){
-                         array += [UIImage(data: imageData)!]
-                        self.arraySearchResultImages.append(array)
-                    }
-                }
+            DispatchQueue.main.async {
+                self.placeName.text = self.searchResults?.name
+                self.placeRate.rating = Double(self.searchResults?.rateAvg ?? 3)
+                self.shortDesc.text = self.searchResults?.shortDesc
+                self.numberOfRaters.text = String("\(self.searchResults?.numOfRater ?? 0) peoples Rate this place")
+                self.pageControllE.numberOfPages = self.searchResults!.images.count
+                self.numberOfImages = self.searchResults!.images
+                self.colllectionViewImages.reloadData()
             }
-            self.colllectionViewImages.reloadData()
+            
         }
     }
     
     
     
-
+    
     @objc func changeImage(){
         let desiredScrollPosition = (currentIndex < numberOfImages!.count - 1) ? currentIndex+1 : 0
         colllectionViewImages.scrollToItem(at:IndexPath(item: desiredScrollPosition, section: 0), at: .centeredHorizontally, animated: true)
-      }
+    }
     
     
     @IBAction func createEvent(_ sender: UIButton) {
     }
     
-  
+    
     
     @IBAction func menu(_ sender: UIButton) {
     }
@@ -127,15 +122,15 @@ class HomeCollectionViewCell:UICollectionViewCell{
 
 extension HomeCollectionViewCell:UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-       // print(arrrayOfImages.count)
-        return arraySearchResultImages.count
+        // print(arrrayOfImages.count)
+        return searchResults?.images.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = colllectionViewImages.dequeueReusableCell(withReuseIdentifier: "slideImages", for: indexPath) as! slideImageCollectionViewCell
-       
         
-        cell.setImages = arraySearchResultImages[indexPath.row]
+        
+        cell.setImages = searchResults?.images
         
         
         return cell
@@ -143,9 +138,9 @@ extension HomeCollectionViewCell:UICollectionViewDelegate,UICollectionViewDataSo
     
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-           let size=collectionView.frame.size
-           return CGSize(width: size.width, height: size.height)
-       }
+        let size=collectionView.frame.size
+        return CGSize(width: size.width, height: size.height)
+    }
     
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

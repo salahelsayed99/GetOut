@@ -7,11 +7,8 @@
 //
 
 import UIKit
-import Lottie
 
 class SignInViewController: UIViewController,UITextFieldDelegate{
-    let animationView = AnimationView()
-    let userDefault = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,16 +45,11 @@ class SignInViewController: UIViewController,UITextFieldDelegate{
         }
             
         else{
-            Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/signin?email=\(email)&password=\(password)") { (obj:SignIn) in
-                if obj.statusCode == 200{
-                    print("sucess")
-                    self.userDefault.set(obj.user.token.userID, forKey: "userToken")
-                    //Helper.saveToken(token: obj.user.id)
-                    self.present(Helper.goToTabBar(), animated: true, completion: nil)
-                }
-            }
+            SignInViewModelController.shared.createUrl(email: email, password: password)
+             self.present(Helper.goToTabBar(), animated: true, completion: nil)
             
         }
+        
         
         
         
@@ -74,15 +66,6 @@ class SignInViewController: UIViewController,UITextFieldDelegate{
     }
     
     
-    func startAnimation(){
-        animationView.animation = Animation.named("location")
-        animationView.frame = CGRect(x: 0, y: 0, width: 200, height: 200)
-        animationView.center = lottieView.center
-        animationView.contentMode = .scaleAspectFit
-        animationView.loopMode = .loop
-        animationView.play()
-        lottieView.addSubview(animationView)
-    }
     
 }
 

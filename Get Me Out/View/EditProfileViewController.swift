@@ -9,15 +9,15 @@
 import UIKit
 
 class EditProfileViewController: UIViewController {
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
     }
 
     @IBOutlet weak var personalImage: UIImageView!
-        
-    
+
+
     @IBOutlet weak var nameTextField: UITextField!{
         didSet{
             self.nameTextField.setBottomBorder()
@@ -33,7 +33,7 @@ class EditProfileViewController: UIViewController {
             self.emailTextField.setBottomBorder()
         }
     }
-    
+
     @IBOutlet weak var locationTextField: UITextField!{
         didSet{
             self.locationTextField.setBottomBorder()
@@ -49,7 +49,7 @@ class EditProfileViewController: UIViewController {
             self.confirmButton.rounded()
         }
     }
-    
+
     @IBAction func confirmBtn(_ sender: UIButton) {
     }
     @IBAction func changePersonalImage(_ sender: UIButton) {
@@ -59,7 +59,7 @@ class EditProfileViewController: UIViewController {
 }
 
 extension EditProfileViewController:UIImagePickerControllerDelegate,UINavigationControllerDelegate{
-    
+
     func showChooseSourceTypeAlertController() {
         let photoLibraryAction = UIAlertAction(title: "Choose a Photo", style: .default) { (action) in
             self.showImagePickerController(sourceType: .photoLibrary)
@@ -68,12 +68,12 @@ extension EditProfileViewController:UIImagePickerControllerDelegate,UINavigation
             self.showImagePickerController(sourceType: .camera)
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        
+
         let alert = AlertService.showAlert(style: .actionSheet, title: "Choose your image", message: nil, actions: [photoLibraryAction,cameraAction,cancelAction], completion: nil)
         present(alert, animated: true, completion: nil)
     }
-    
-    
+
+
     func showImagePickerController(sourceType:UIImagePickerController.SourceType){
         let imagePickerController = UIImagePickerController()
         imagePickerController.delegate=self
@@ -81,7 +81,7 @@ extension EditProfileViewController:UIImagePickerControllerDelegate,UINavigation
         imagePickerController.sourceType = sourceType
         present(imagePickerController, animated: true, completion: nil)
     }
-    
+
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let editedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage{
             personalImage.image=editedImage
@@ -89,8 +89,8 @@ extension EditProfileViewController:UIImagePickerControllerDelegate,UINavigation
         else if let originalImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage{
             personalImage.image=originalImage
         }
-        
+
         dismiss(animated: true, completion: nil)
     }
-    
+
 }

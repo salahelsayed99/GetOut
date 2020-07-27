@@ -18,4 +18,18 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     
     
     
+    var data:CategoryViewModel?{
+        didSet{
+            updateCell()
+        }
+    }
+    
+    func updateCell(){
+        
+        let url = URL(string:data!.imageurl )
+        cellImage.kf.setImage(with: url)
+        cellLabel.text = data?.name
+        
+    }
+    
 }

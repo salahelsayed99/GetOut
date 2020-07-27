@@ -78,7 +78,6 @@ class Datum: Codable {
 // MARK: - Pivot
 class Pivot: Codable {
     let categoryID, placeID: Int
-
     enum CodingKeys: String, CodingKey {
         case categoryID = "category_id"
         case placeID = "place_id"

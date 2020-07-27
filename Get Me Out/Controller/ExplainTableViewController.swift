@@ -9,7 +9,9 @@
 import UIKit
 
 class ExplainTableViewController:UIViewController,UITableViewDataSource,UITableViewDelegate{
-    var categories = [CategoryElement]()
+   var explainViewModel = ExplainViewModelController()
+    
+    var categories = [ExplainViewModel]()
     var storedOffsets = [Int: CGFloat]()
 
     @IBOutlet var rateView: UIView!
@@ -28,31 +30,18 @@ class ExplainTableViewController:UIViewController,UITableViewDataSource,UITableV
     @IBOutlet weak var searchBar: UIBarButtonItem!
     
     override func viewDidLoad() {
-        searchController.searchBar.delegate = self
         super.viewDidLoad()
         //setRateView()
+        explainViewModel.delegate = self
+        explainViewModel.fetchData()
+        searchController.searchBar.delegate = self
         tableView.separatorStyle = .none
         tableView.dataSource = self
         tableView.delegate = self
-        fetchData()
-    
     }
     
     
-    func fetchData(){
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            DispatchQueue.main.async {
-                Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/home_categories?lang=ar") { (info:Category) in
-                    if info.statusCode == 200{
-                        self?.categories = info.categories
-                        self?.tableView.reloadData()
-                    }
-                }
-                
-            }
-        }
-    }
-    
+
     
     
     //MARK:-RateView
@@ -82,7 +71,7 @@ class ExplainTableViewController:UIViewController,UITableViewDataSource,UITableV
         guard let tabBar = tabBarController?.tabBar else { fatalError("TabBar controller does not exist.")
         }
         navBar.firstViewAfterTabBar()
-        navigationItem.largeTitleDisplayMode = .automatic
+        //navigationItem.largeTitleDisplayMode = .automatic
         tabBar.firstViewAfterTabBar()
         
     }
@@ -112,7 +101,6 @@ class ExplainTableViewController:UIViewController,UITableViewDataSource,UITableV
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! ExplainTableViewCell
         cell.places = categories[indexPath.row]
         cell.collectionViewOffset = storedOffsets[indexPath.row] ?? 0
-
         cell.buttonDelegate = self
         return cell
     }
@@ -199,6 +187,15 @@ extension ExplainTableViewController:UISearchBarDelegate{
 }
 
 
+
+extension ExplainTableViewController:ExplainViewModelControllerDelegate{
+    func sendCategories(_ data: [ExplainViewModel]) {
+        categories = data
+        tableView.performSelector(onMainThread: #selector(UITableView.reloadData), with: nil, waitUntilDone: false)
+    }
+    
+    
+}
 
 
 

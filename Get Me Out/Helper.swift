@@ -9,19 +9,12 @@
 import UIKit
 
 
-struct Helper{
+class Helper{
     
     
-    
-//    static func saveToken(token:Int){
-//        let userDefault = UserDefaults.standard
-//        userDefault.set(token, forKey: "userToken")
-//    }
-//    
-//    static func fetchToken()->Int?{
-//        let userDefault = UserDefaults.standard
-//        return userDefault.object(forKey: "userToken") as? Int
-//    }
+    var currentIndex = 0
+
+
     
     
     static func goToTabBar()->UIViewController{
@@ -35,12 +28,20 @@ struct Helper{
     static func searchBarCustomization(searchController:UISearchController)->UISearchController{
         searchController.hidesNavigationBarDuringPresentation = true
                searchController.searchBar.tintColor = UIColor.white
-               searchController.searchBar.barTintColor = UIColor.blue
+               searchController.searchBar.barTintColor = UIColor.link
                let textFieldInsideSearchBar = searchController.searchBar.value(forKey: "searchField") as? UITextField
                textFieldInsideSearchBar?.textColor = .black
                textFieldInsideSearchBar?.backgroundColor = .white
         return searchController
     }
+    
+    
+    
+   @objc  func slideImageDelegate(collectionView:UICollectionView,numberOfImages:Int){
+        let desiredScrollPosition = (currentIndex < numberOfImages - 1) ? currentIndex+1 : 0
+              collectionView.scrollToItem(at:IndexPath(item: desiredScrollPosition, section: 0), at: .centeredHorizontally, animated: true)
+    }
+    
     
 }
 

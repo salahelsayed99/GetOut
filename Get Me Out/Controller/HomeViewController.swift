@@ -12,35 +12,27 @@ import UIKit
 
 class HomeViewController: UIViewController {
     
+    var searchViewModel = SearchViewModelController()
+    
     @IBOutlet weak var collectionView: UICollectionView!
     var storedOffsets = [Int: CGFloat]()
-    
-    var searchResult=[SearchDataModel]()
+    var searchResult=[SearchViewModel]()
     let searchController = UISearchController(searchResultsController: nil)
     
     var BeginSearch:String?{
         didSet{
             searchResult.removeAll()
             if let searchTarget = self.BeginSearch{
-                DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                    DispatchQueue.main.async {
-                        Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/search?lang=ar&name=\(searchTarget)") { (info:SearchInformation) in
-                            if info.statusCode == 200{
-                                print("move to explore using search bar ")
-                                for searchResult in info.places.data{
-                                    let newSearchResultObj = SearchDataModel(id: searchResult.id!, name: searchResult.name, rateAvg:Int(searchResult.rateAvg), numOfRater: searchResult.numOfRater, latitude: searchResult.latitude, longitude: searchResult.longitude, shortDesc: searchResult.shortDesc, address: searchResult.address, imageurl: searchResult.imageurl, isbookmarked: searchResult.isbookmarked, dashboardurl: searchResult.dashboardurl, images: searchResult.images)
-                                    self?.searchResult.append(newSearchResultObj)
-                                }
-                                self?.collectionView.reloadData()
-                            }
-                            
-                        }
-                    }
-                }
+            searchViewModel.fetchData(searchTarget: searchTarget)
             }
         }
     }
     
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        searchViewModel.delegate=self
+    }
     
     
     override func viewDidLoad() {
@@ -48,13 +40,7 @@ class HomeViewController: UIViewController {
         searchController.searchBar.delegate = self
         collectionView.delegate=self
         collectionView.dataSource=self
-        let flowLayout = UPCarouselFlowLayout()
-        flowLayout.itemSize = CGSize(width: UIScreen.main.bounds.size.width - 60.0, height: collectionView.frame.size.height-50)
-        flowLayout.scrollDirection = .horizontal
-        flowLayout.sideItemScale = 0.8
-        flowLayout.sideItemAlpha = 1.0
-        flowLayout.spacingMode = .fixed(spacing: 15.0)
-        collectionView.collectionViewLayout = flowLayout
+        setCourselEffect()
     }
     
     
@@ -72,11 +58,13 @@ extension HomeViewController:UICollectionViewDataSource,UICollectionViewDelegate
         return searchResult.count
     }
     
+    
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeCollectionViewCell", for: indexPath) as! HomeCollectionViewCell
         cell.collectionViewOffset = storedOffsets[indexPath.row] ?? 0
         cell.searchResults = searchResult[indexPath.row]
-        cell.numberOfImages = searchResult[indexPath.row].images
+       // cell.numberOfImages = searchResult[indexPath.row].images
         return cell
     }
     
@@ -89,6 +77,16 @@ extension HomeViewController:UICollectionViewDataSource,UICollectionViewDelegate
         storedOffsets[indexPath.row] = collectionCell.collectionViewOffset
     }
     
+    func setCourselEffect(){
+        let flowLayout = UPCarouselFlowLayout()
+               flowLayout.itemSize = CGSize(width: UIScreen.main.bounds.size.width - 60.0, height: collectionView.frame.size.height-50)
+               flowLayout.scrollDirection = .horizontal
+               flowLayout.sideItemScale = 0.8
+               flowLayout.sideItemAlpha = 1.0
+               flowLayout.spacingMode = .fixed(spacing: 15.0)
+               collectionView.collectionViewLayout = flowLayout
+    }
+    
 }
 
 
@@ -96,7 +94,15 @@ extension HomeViewController:UISearchBarDelegate{
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         BeginSearch = searchBar.text
-        
+    }
+    
+}
+
+
+extension HomeViewController:SearchViewModelControllerDelegate{
+    func sendSearchResults(_ data: [SearchViewModel]) {
+        searchResult = data
+        collectionView.performSelector(onMainThread: #selector(UICollectionView.reloadData), with: nil, waitUntilDone: false)
     }
     
 }

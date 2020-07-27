@@ -21,10 +21,12 @@ class ExplainTableViewCell: UITableViewCell {
     
     
     
-    var places:CategoryElement?{
+    var places:ExplainViewModel?{
         didSet{
-            categoryName.text = self.places?.name
+                categoryName.text = self.places?.name
             collectionView.reloadData()
+            
+      
         }
     }
     

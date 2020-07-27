@@ -23,20 +23,17 @@ class ExplainCollectionViewCell: UICollectionViewCell {
     
     var data:Datum?{
         didSet{
-            setData()
+            performSelector(onMainThread: #selector(setData), with: nil, waitUntilDone: false)
+            //setData()
         }
     }
     
-    func setData(){
-        if  let url = URL(string: data!.imageurl ){
-        if let imageData = try? Data(contentsOf: url){
-                self.imagePlace.image = UIImage(data: imageData)
+    @objc func setData(){
+                let url = URL(string:data!.imageurl )
+                imagePlace.kf.setImage(with: url)
                 self.namePlace.text = self.data?.name
                 self.ratePlace.rating = self.data?.rateAvg ?? 0
             
-        }
-    }
-        
         self.addShadow()
 }
 

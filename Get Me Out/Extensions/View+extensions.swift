@@ -1,5 +1,5 @@
 //
-//  Button+extensions.swift
+//  View+extensions.swift
 //  Get Me Out
 //
 //  Created by Salah  on 27/05/2020.
@@ -21,12 +21,10 @@ extension UIView {
         pulse.repeatCount = 2
         pulse.initialVelocity = 0.5
         pulse.damping = 1.0
-        
         layer.add(pulse, forKey: "pulse")
     }
   
       func flash() {
-        
         let flash = CABasicAnimation(keyPath: "opacity")
         flash.duration = 0.5
         flash.fromValue = 1
@@ -34,7 +32,6 @@ extension UIView {
         flash.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         flash.autoreverses = true
         flash.repeatCount = 3
-        
         layer.add(flash, forKey: nil)
     }
     
