@@ -23,10 +23,8 @@ class ExplainTableViewCell: UITableViewCell {
     
     var places:ExplainViewModel?{
         didSet{
-                categoryName.text = self.places?.name
+            categoryName.text = self.places?.name
             collectionView.reloadData()
-            
-      
         }
     }
     

@@ -8,6 +8,7 @@
 
 import UIKit
 
+
 class slideImageCollectionViewCell: UICollectionViewCell {
    
     @IBOutlet weak var images: UIImageView!

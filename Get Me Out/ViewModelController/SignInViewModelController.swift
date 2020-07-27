@@ -16,11 +16,14 @@ class SignInViewModelController{
     
     
     func createUrl(email:String,password:String){
+        DispatchQueue.global(qos: .userInitiated).async {
+
         Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/signin?email=\(email)&password=\(password)") { (obj:SignIn) in
             if obj.statusCode == 200{
                 print("sucess")
                 self.userDefault.set(obj.user.token.userID, forKey: "userToken")
             }
+        }
         }
     }
     

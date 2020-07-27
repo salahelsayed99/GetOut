@@ -25,7 +25,15 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     }
     
     func updateCell(){
+//        DispatchQueue.main.async {
+//            if let url = URL(string: self.data!.imageurl){
+//                   let imageData = try? Data(contentsOf: url)
+//                self.cellImage.image = UIImage(data: imageData!)
+//               }
+//               
+//        }
         
+   
         let url = URL(string:data!.imageurl )
         cellImage.kf.setImage(with: url)
         cellLabel.text = data?.name

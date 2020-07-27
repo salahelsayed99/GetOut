@@ -1,13 +1,15 @@
 PODS:
   - Cosmos (21.0.0)
   - IQKeyboardManagerSwift (6.5.5)
-  - Kingfisher (4.10.1)
+  - Kingfisher (5.14.1):
+    - Kingfisher/Core (= 5.14.1)
+  - Kingfisher/Core (5.14.1)
   - UnderLineTextField (2.1.0)
 
 DEPENDENCIES:
   - Cosmos (~> 21.0)
   - IQKeyboardManagerSwift
-  - Kingfisher
+  - Kingfisher (= 5.14.1)
   - UnderLineTextField (~> 2.1)
 
 SPEC REPOS:
@@ -20,9 +22,9 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Cosmos: 3dfb6e4ba48bd48b8c9aa2a77048ae11ed114f96
   IQKeyboardManagerSwift: 0fb93310284665245591f50f7a5e38de615960b7
-  Kingfisher: c148cd7b47ebde9989f6bc7c27dcaa79d81279a0
+  Kingfisher: 8050bc6f7f68cbf3908bd04df7ccbac188f6d6d6
   UnderLineTextField: b3f5307b56962331e30a965e81b79aae2df1de83
 
-PODFILE CHECKSUM: 7ade28f16de69e9183dc96c6bfce7200cafc8de5
+PODFILE CHECKSUM: 9a62dd487a83816479883a89f074835c9042987c
 
 COCOAPODS: 1.8.4

@@ -17,12 +17,16 @@ class PlaceDescriptionViewModelController{
     
 
     var delegate:PlaceDescriptionViewModelControllerDelegate?
-    
+
       func fetchData(id:Int){
+        DispatchQueue.global(qos: .userInitiated).async {
+
         Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/place?lang=ar&place_id=\(id)") { (data:PlaceDescription) in
             if data.statusCode == 200{
                 self.delegate?.sendPlaceDescriptionData(PlaceDescriptionViewModel(place: data.place))
             }
+        }
+        
         }
         
     }

@@ -23,8 +23,7 @@ class ExplainCollectionViewCell: UICollectionViewCell {
     
     var data:Datum?{
         didSet{
-            performSelector(onMainThread: #selector(setData), with: nil, waitUntilDone: false)
-            //setData()
+            setData()
         }
     }
     

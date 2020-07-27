@@ -18,12 +18,15 @@ class CategoryViewModelController{
     
     
     func fetchData(){
-        
+        DispatchQueue.global(qos: .userInitiated).async {
+
         Service.shared.fetchGenericData(urlString: "http://v1.khargny.com/api/category") { (info:Welcome) in
             if info.statusCode == 200{
                 self.categoriesArray = info.categories.map({return CategoryViewModel(cell: $0)})
                 self.delegate?.sendCategory(self.categoriesArray)
             }
+            }
+            
         }
         
         

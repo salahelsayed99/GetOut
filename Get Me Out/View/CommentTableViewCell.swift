@@ -35,10 +35,8 @@ class CommentTableViewCell: UITableViewCell {
     
     func setData(){
         label.text = comments?.comment
-        if  let url = URL(string: (comments?.user.imageurl)! ){
-                          if let imageData = try? Data(contentsOf: url){
-                                  self.myImage.image = UIImage(data: imageData)
-                          }
-                      }
+        let url = URL(string: (self.comments?.user.imageurl)!)
+        myImage.kf.setImage(with: url)
+
     }
 }
